@@ -11,7 +11,7 @@ function SuperRegion(id, armiesReward) {
     this.subRegions = [];
 
     _.bindAll(this);
-};
+}
 
 /**
  * Adds a subregion to this super region
@@ -20,7 +20,7 @@ function SuperRegion(id, armiesReward) {
 SuperRegion.prototype.addSubRegion = function(region) {
     var hasRegion = function(subRegion) {
         return subRegion.sameAs(region);
-    }
+    };
 
     if (!_.any(this.subRegions, hasRegion)) {
         this.subRegions.push(region);
@@ -43,7 +43,7 @@ SuperRegion.prototype.ownedByPlayer = function() {
     }
 
     return '';
-}
+};
 
 /**
  * Returns whether this region is the same as test region
@@ -52,6 +52,6 @@ SuperRegion.prototype.ownedByPlayer = function() {
  */
 SuperRegion.prototype.sameAs = function(superRegion) {
     return this.id === superRegion.id;
-}
+};
 
 module.exports = SuperRegion;

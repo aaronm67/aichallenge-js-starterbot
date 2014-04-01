@@ -35,7 +35,7 @@ Map.prototype.addSuperRegion = function(superRegion) {
 Map.prototype.containsRegion = function(region) {
     return _.any(this.regions, function(r) {
         return r.sameAs(region);
-    })
+    });
 };
 
 /**
@@ -46,15 +46,15 @@ Map.prototype.containsRegion = function(region) {
 Map.prototype.containsSuperRegion = function(superRegion) {
     return _.any(this.superRegions, function(r) {
         return r.sameAs(superRegion);
-    })
-}
+    });
+};
 
 /**
  * Gets a copy of the map
  * @return {Map}
  */
 Map.prototype.getCopy = function() {
-    return _.deepClone(this);
+    return _.cloneDeep(this);
 };
 
 /**
@@ -63,7 +63,7 @@ Map.prototype.getCopy = function() {
  * @return {Region}
  */
 Map.prototype.getRegion = function(id) {
-    return _.first(this.regions, function(region) {
+    return _.find(this.regions, function(region) {
         return region.id === id;
     });
 };
@@ -74,9 +74,9 @@ Map.prototype.getRegion = function(id) {
  * @return {SuperRegion}
  */
 Map.prototype.getSuperRegion = function(id) {
-    return _.first(this.superRegions, function(region) {
+    return _.find(this.superRegions, function(region) {
         return region.id === id;
-    })
+    });
 };
 
 /**

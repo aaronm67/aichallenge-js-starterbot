@@ -45,7 +45,7 @@ Region.prototype.isNeighbor = function(region) {
  */
 Region.prototype.isOwnedByPlayer = function(playerName) {
     return this.playerName === playerName;
-}
+};
 
 /**
  * Returns whether this region is the same as test region

@@ -1,6 +1,6 @@
 var _ = require('lodash');
-var sys = require('sys');
 var BotState = require('./bot-state');
+var readline = require('readline');
 
 function BotParser(bot) {
     this.bot = bot;
@@ -8,13 +8,24 @@ function BotParser(bot) {
     _.bindAll(this);
 }
 
+
+var debug = function(output) {
+}
+
 /**
  * Starts a process to read from stdin
  */
 BotParser.prototype.run = function() {
     var stdIn = process.openStdin();
-    stdIn.addListener('data', this.handleStdin);
-}
+
+    var rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+        terminal: false
+    });
+
+    rl.on('line', this.handleStdin);
+};
 
 /**
  * Writes a line of output to the bot program
@@ -22,7 +33,7 @@ BotParser.prototype.run = function() {
  */
 BotParser.prototype.writeLine = function(output) {
     console.log(output);
-}
+};
 
 /**
  * Writes a line of error message to the bot program
@@ -30,27 +41,28 @@ BotParser.prototype.writeLine = function(output) {
  */
 BotParser.prototype.writeError = function(output) {
     console.log('Error:' + output);
-}
+};
 
 /**
  * Reads a line of input, parses it, and writes a response
  * @param  {String} input - input string
  */
 BotParser.prototype.handleStdin = function(input) {
-    var inputStr = input.toString().substring(0, input.length - 1);
-
+    var inputStr = input.toString().substring(0, input.length).trim();
     if (!inputStr) {
         return;
     }
 
-    var parts = inputStr.split(' ');
-    var output = '';
+    var parts = _.map(inputStr.split(' '), function(i) {
+        return i.trim();
+    });
 
     if (parts[0] === 'pick_starting_regions') {
         return this.pickStartingRegions(parts);
     }
     
     if (parts.length === 3 && parts[0] === 'go') {
+        
         if (parts[1] === 'place_armies') {
             return this.placeArmies(parts);
         }
@@ -60,7 +72,7 @@ BotParser.prototype.handleStdin = function(input) {
         }
     }
 
-    if (parts.Length == 3 && parts[0] == "settings") {
+    if (parts.length === 3 && parts[0].trim() === "settings") {
         return this.currentState.updateSettings(parts[1], parts[2]);
     }
     
@@ -72,13 +84,13 @@ BotParser.prototype.handleStdin = function(input) {
     // All visible regions are given
     if (parts[0] == "update_map") {
         return this.currentState.updateMap(parts);
-    };
+    }
 
     if (parts[0] == "opponent_moves") {
         return this.currentState.readOpponentMoves(parts);
     }
 
-    this.writeError('Unable to parse line "' + input + '"')
+    this.writeError('BOT:: Unable to parse line "' + parts.length + '    ' + input + '"');
 };
 
 /**
@@ -88,7 +100,10 @@ BotParser.prototype.handleStdin = function(input) {
 BotParser.prototype.pickStartingRegions = function(parts) {
      // Pick which regions you want to start with
     this.currentState.setPickableStartingRegions(parts);
-    var preferredStartingRegions = this.bot.getPreferredStartingRegions(this.currentState, long.Parse(parts[1]));
+    debug(this);
+
+    var preferredStartingRegions = this.bot.getPreferredStartingRegions(this.currentState, parseInt(parts[1]));
+
 
     var output = _.map(preferredStartingRegions, function(region) {
         return region.id;

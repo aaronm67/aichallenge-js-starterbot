@@ -18,10 +18,10 @@ PlaceArmiesMove.prototype = new Move;
 
 PlaceArmiesMove.prototype.getString = function() {
     if (this.illegalMove) {
-        return this.PlayerName + " illegal_move " + this.IllegalMove;
+        return this.playerName + " illegal_move " + this.illegalMove;
     }
 
-    return this.PlayerName + " attack/transfer " + this.fromRegion.Id + " " + this.toRegion.Id + " " + this.armies;
-}
+    return this.playerName + " attack/transfer " + this.fromRegion.Id + " " + this.toRegion.Id + " " + this.armies;
+};
 
 module.exports = PlaceArmiesMove;
